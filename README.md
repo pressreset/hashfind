@@ -1,5 +1,5 @@
 # hashfind
-Hashfind is a script for Mac OSX that builds a plaintext hash database of files within a directory, and allows you to search that database.
+Hashfind is a script for Mac OSX that builds a plaintext hash database of files within a directory, and allows you to search that database. The bonuses of this being that you can move the databases for individual directories, cards, or drives wherever you want, so you will know the location of a file even if a drive is unplugged, and that Spotlight will index the files so you can search a hash within Spotlight and it will show the relevant database file.
 
 This is a very simple script, and uses the built in utilities.
 
