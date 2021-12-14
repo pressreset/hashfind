@@ -1,0 +1,52 @@
+#!/bin/zsh
+
+# Set variable defaults 
+database="hashfind.db"
+location="."
+
+# Help message on no inputs 
+
+if [[ $# -eq 0 ]]; then
+    echo "
+    usage: $0 -h [hash]
+
+    -d|--database [/path/to/file.db] | Default is hashfind.db, if in current directory.
+    -l|--location [/path/to/location] | Default is current directory.
+    -b|--build | Build/rebuild the database. Defaults to current directory.
+    -h|--hash [hash] | An md5 of a file to locate.
+    -f|--file [file] | Supply a filename or path/to/file. It will be hashed, then located.
+    "
+    exit 1
+fi
+
+# Check / load all values from cmd line
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -d|--database) database="$2"; shift;;
+        -l|--location) location="$2"; shift;;
+        -b|--build) switch="build";;
+        -h|--hash) hash="$2"; switch="hash"; shift;;
+        -f|--file) file="$2"; switch="find"; shift;;
+        *) echo "Unknown option: $1"; exit 1;;
+    esac
+    shift
+done
+
+# Check if the database we want to check against exists
+if [[ ! -f "$database" && $switch != "build" ]]; then
+    echo "
+    $database does not exist!
+    Can't check against a non existant database!
+    ";
+    exit 1;
+fi
+
+# Check what thing we wanna do, and do it
+
+case $switch in
+    build) find $location -type f | xargs md5 > $database &> /dev/null;;;
+    hash) grep $hash $database;; 
+    find) md5 -q $file | grep -f - $database;;
+    *) grep $hash $database;;
+esac
